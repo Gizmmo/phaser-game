@@ -60,16 +60,30 @@ var menuState = {
 		//When the 'upKey' is pressed, it will call the 'start' function once
 		upKey.onDown.addOnce(this.start, this);
 
-		//If 'bestscore' is not defined
-		//It means this is the first time the game is played
-		if (!localStorage.getItem('bestScore')) {
-			//Then set the best score to 0
-			localStorage.setItem('bestScore', 0);
+		//Add the mute button that calls the 'toggleSound' function when pressed
+		this.muteButton = game.add.button(20, 20, 'mute', this.toggleSound, this);
+
+		//If the game is already muted
+		if (game.sound.mute) {
+			//Change the frame to display the speaker with no sound
+			this.muteButton.frame = 1;
 		}
+
+		//If the mouse is pver the button, it becomes a hand cursor
+		this.muteButton.input.useHandOver = true;
 	},
 
 	start: function() {
 		//Start the actual game
 		game.state.start('play');
+	},
+
+	toggleSound: function() {
+		//Switch the Phaser sound variable from true to false, or false to true
+		//When 'game.sound.mute = true', Phaser will mute the game
+		game.sound.mute = ! game.sound.mute;
+
+		//Change the frame of the button
+		this.muteButton.frame = game.sound.mute ? 1 : 0;
 	}
 }

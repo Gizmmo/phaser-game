@@ -37,6 +37,7 @@ var loadState = {
 		//LOAD ALL OF OUR SPRITESHEET ASSETS---------------
 		
 		game.load.spritesheet('player', 'assets/player2.png', 20, 20);
+		game.load.spritesheet('mute', 'assets/muteButton.png', 28, 22);
 		
 		//COMPLETE LOADING OUR SPRITESHEET ASSETS----------
 		// LOAD ALL OF OUR SOUND ASSETS--------------------
