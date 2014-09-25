@@ -1,7 +1,10 @@
 var loadState = {
-	preload: function () {
+	preload: function() {
 		//Add a "loading..." label on the screen
-		var loadingLabel = game.add.text(game.world.centerX, 150, 'loading...', {font: '30px Arial', fill: '#ffffff'});
+		var loadingLabel = game.add.text(game.world.centerX, 150, 'loading...', {
+			font: '30px Arial',
+			fill: '#ffffff'
+		});
 		loadingLabel.anchor.setTo(0.5, 0.5);
 
 		//Display the progress bar
@@ -9,8 +12,8 @@ var loadState = {
 		progressBar.anchor.setTo(0.5, 0.5);
 		game.load.setPreloadSprite(progressBar);
 
-		//LOAD ALL OUR ASSETS---------------------
-		
+		//LOAD ALL OUR IMAGE ASSETS---------------------
+
 		//load player image
 		game.load.image('player', 'assets/player.png');
 
@@ -28,6 +31,17 @@ var loadState = {
 		game.load.image('background', 'assets/background.png');
 
 		//COMPLETE LOADING ASSETS--------------------------
+		//
+		// LOAD ALL OF OUR SOUND ASSETS--------------------
+
+		//Sounds when the player Jumps
+		game.load.audio('jump', ['assets/jump.ogg', 'assets/jump.mp3']);
+
+		//Sound when the player takes a coin
+		game.load.audio('coin', ['assets/coin.ogg', 'assets/coin.mp3']);
+
+		//Sound when the player dies
+		game.load.audio('dead', ['assets/dead.ogg', 'assets/dead.mp3']);
 	},
 
 	create: function() {
