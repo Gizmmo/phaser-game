@@ -48,6 +48,29 @@ var playState = {
 		//The enemies are 'dead' by default, so they are not visible in game
 		this.enemies.createMultiple(10, 'enemy');
 
+		//Create the player animations
+		//Create the 'right' animation by looping thorugh frames 1 and 2
+		this.player.animations.add('right', [1, 2], 8, true);
+		//Create the 'left' animation by looping the frames 3 and 4
+		this.player.animations.add('left', [3, 4], 8, true);
+
+		//Create the emitter with 15 particles.  We don't need to set the x and y
+		//Since we don't know where to do the explosion yet
+		this.emitter = game.add.emitter(0, 0, 15);
+
+		//Set the 'pixel' image for the particles
+		this.emitter.makeParticles('pixel');
+
+		//Set the y speed of the particles bewtween -150 and 150
+		//The speed will be randomly picked for each particle
+		this.emitter.setYSpeed(-150, 150);
+
+		//Same thing for the x speed
+		this.emitter.setXSpeed(-150, 150);
+
+		//Use no gravity for the particles
+		this.emitter.gravity = 0;
+
 		game.time.events.loop(2200, this.addEnemy, this);
 	},
 
@@ -79,12 +102,42 @@ var playState = {
 		this.scoreLabel.text = 'score: ' + game.global.score;
 		this.updateCoinPosition();
 		this.coinSound.play();
+
+		//Scale the coin to 0 to make it invisible
+		this.coin.scale.setTo(0, 0);
+
+		//Grow the coin back to its original scale in 300ms
+		game.add.tween(this.coin.scale).to({x: 1, y: 1}, 300).start();
+
+		//Grow the player a little each time the coin is taken
+		game.add.tween(this.player.scale).to({x: 1.3, y:1.3}, 50).to({x: 1, y: 1}, 150).start().onComplete.add(function(){console.log("completed")}, this);;
 	},
 
 	playerDie: function() {
-		// When the player dies, we go to the menu 
-		game.state.start('menu');
+		//if the player is already dead, do nothing
+		if(!this.player.alive) {
+			return;
+		}
+		
+		//Kill the player to make it dissappear from the stage
+		this.player.kill();
+
+		//Start the sound of death!
 		this.deadSound.play();
+		
+		//Set the position of the emitter to the player
+		this.emitter.x = this.player.x;
+		this.emitter.y = this.player.y;
+
+		//Start the emitter bby exploding 15 particles that will live for 600ms
+		this.emitter.start(true, 600, null, 15);
+
+		//Call the 'startMenu' function in 1000ms
+		game.time.events.add(1000, this.startMenu, this);
+	},
+
+	startMenu: function () {
+		game.state.start('menu');
 	},
 
 	addEnemy: function () {
@@ -118,17 +171,21 @@ var playState = {
 		if (this.cursor.left.isDown) {
 			//Move the player to the left
 			this.player.body.velocity.x = -200;
+			this.player.animations.play('left');
 		}
 
 		//If the right arrow key is pressed
 		else if (this.cursor.right.isDown) {
 			//Move the player to the right
 			this.player.body.velocity.x = 200;
+			this.player.animations.play('right');
 		}
 
 		//If neither left nor right is being pressed
 		else {
 			this.player.body.velocity.x = 0;
+			this.player.animations.stop(); // Stop the animation 
+			this.player.frame = 0; // Set the player frame to 0 (stand still)
 		}
 
 		if (this.cursor.up.isDown && this.player.body.touching.down) {

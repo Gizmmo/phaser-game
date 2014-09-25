@@ -30,8 +30,15 @@ var loadState = {
 		//Load the bacground image for the menu
 		game.load.image('background', 'assets/background.png');
 
+		//Loads pixel for our particle effects
+		game.load.image('pixel', 'assets/pixel.png');
+
 		//COMPLETE LOADING ASSETS--------------------------
-		//
+		//LOAD ALL OF OUR SPRITESHEET ASSETS---------------
+		
+		game.load.spritesheet('player', 'assets/player2.png', 20, 20);
+		
+		//COMPLETE LOADING OUR SPRITESHEET ASSETS----------
 		// LOAD ALL OF OUR SOUND ASSETS--------------------
 
 		//Sounds when the player Jumps
