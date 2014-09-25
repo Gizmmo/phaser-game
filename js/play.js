@@ -1,7 +1,7 @@
 var playState = {
 
 	create: function() {
-//Creates the player in the center of the world, and fixes his anchor point to be its center
+		//Creates the player in the center of the world, and fixes his anchor point to be its center
 		this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 		this.player.anchor.setTo(0.5, 0.5);
 
@@ -71,7 +71,8 @@ var playState = {
 		//Use no gravity for the particles
 		this.emitter.gravity = 0;
 
-		game.time.events.loop(2200, this.addEnemy, this);
+		// Contains the time of the next enemy creation
+		this.nextEnemy = 0;
 	},
 
 	update: function() {
@@ -94,6 +95,22 @@ var playState = {
 
 		//Checks to see if the player has left the visible world space
 		this.checkIfInWorld();
+
+		// If the 'nextEnemy' time has passed
+		if (this.nextEnemy < game.time.now) { 
+			//Define our variables
+			var start = 4000, end = 1000, score = 100;
+
+			//Formula to decrease the delay between enemies over time
+			//At first its 4000ms, then slowly down to 1000ms
+			var delay = Math.max(start - (start-end) * game.global.score/score, end);
+
+			// We add a new enemy 
+			this.addEnemy();
+
+			// And we update 'nextEnemy' to have a new enemy in 2.2 seconds
+			this.nextEnemy = game.time.now + delay;
+		}
 	},
 
 	takeCoin: function(player, coin) {
@@ -107,24 +124,35 @@ var playState = {
 		this.coin.scale.setTo(0, 0);
 
 		//Grow the coin back to its original scale in 300ms
-		game.add.tween(this.coin.scale).to({x: 1, y: 1}, 300).start();
+		game.add.tween(this.coin.scale).to({
+			x: 1,
+			y: 1
+		}, 300).start();
 
 		//Grow the player a little each time the coin is taken
-		game.add.tween(this.player.scale).to({x: 1.3, y:1.3}, 50).to({x: 1, y: 1}, 150).start().onComplete.add(function(){console.log("completed")}, this);;
+		game.add.tween(this.player.scale).to({
+			x: 1.3,
+			y: 1.3
+		}, 50).to({
+			x: 1,
+			y: 1
+		}, 150).start().onComplete.add(function() {
+			console.log("completed")
+		}, this);;
 	},
 
 	playerDie: function() {
 		//if the player is already dead, do nothing
-		if(!this.player.alive) {
+		if (!this.player.alive) {
 			return;
 		}
-		
+
 		//Kill the player to make it dissappear from the stage
 		this.player.kill();
 
 		//Start the sound of death!
 		this.deadSound.play();
-		
+
 		//Set the position of the emitter to the player
 		this.emitter.x = this.player.x;
 		this.emitter.y = this.player.y;
@@ -136,16 +164,16 @@ var playState = {
 		game.time.events.add(1000, this.startMenu, this);
 	},
 
-	startMenu: function () {
+	startMenu: function() {
 		game.state.start('menu');
 	},
 
-	addEnemy: function () {
+	addEnemy: function() {
 		//Get the first dead enemy of the group
 		var enemy = this.enemies.getFirstDead();
 
 		//If there isn't any dead enemies, do nothing
-		if(!enemy) {
+		if (!enemy) {
 			return;
 		}
 
