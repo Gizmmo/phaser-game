@@ -13,6 +13,12 @@ var playState = {
 
 		//gives the player controls
 		this.cursor = game.input.keyboard.createCursorKeys();
+		game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT]);
+		this.wasd = {
+			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+			right: game.input.keyboard.addKey(Phaser.Keyboard.D)
+		};
 
 		//creates all th world objects
 		this.createWorld();
@@ -196,14 +202,14 @@ var playState = {
 
 	movePlayer: function() {
 		//If the left arrow key is pressed
-		if (this.cursor.left.isDown) {
+		if (this.cursor.left.isDown || this.wasd.left.isDown) {
 			//Move the player to the left
 			this.player.body.velocity.x = -200;
 			this.player.animations.play('left');
 		}
 
 		//If the right arrow key is pressed
-		else if (this.cursor.right.isDown) {
+		else if (this.cursor.right.isDown || this.wasd.right.isDown) {
 			//Move the player to the right
 			this.player.body.velocity.x = 200;
 			this.player.animations.play('right');
@@ -216,7 +222,7 @@ var playState = {
 			this.player.frame = 0; // Set the player frame to 0 (stand still)
 		}
 
-		if (this.cursor.up.isDown && this.player.body.touching.down) {
+		if ((this.cursor.up.isDown || this.wasd.up.isDown) && this.player.body.touching.down) {
 			//Move the player upwards (jump)
 			this.jumpSound.play();
 			this.player.body.velocity.y = -320;

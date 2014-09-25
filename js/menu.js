@@ -11,9 +11,9 @@ var menuState = {
 		//Add a background image
 		game.add.image(0, 0, 'background');
 
-		//display the name of the game
+		// Replaced the '50px Arial' by '70px Geo'
 		var nameLabel = game.add.text(game.world.centerX, -50, 'Super Coin Box', {
-			font: '50px Arial',
+			font: '70px Geo',
 			fill: '#ffffff'
 		});
 		nameLabel.anchor.setTo(0.5, 0.5);
@@ -81,7 +81,7 @@ var menuState = {
 	toggleSound: function() {
 		//Switch the Phaser sound variable from true to false, or false to true
 		//When 'game.sound.mute = true', Phaser will mute the game
-		game.sound.mute = ! game.sound.mute;
+		game.sound.mute = !game.sound.mute;
 
 		//Change the frame of the button
 		this.muteButton.frame = game.sound.mute ? 1 : 0;
